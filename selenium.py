@@ -14,7 +14,7 @@ class GetLowBP(unittest.TestCase):
    
     def test_lowbp(self):
         action = ActionChains(self.browser)
-        self.browser.get("https://bloodpressure-ca-staging.azurewebsites.net")
+        self.browser.get("https://")
         Systolic = self.browser.find_element_by_id("BP_Systolic")
         Systolic.clear()
         action.click(on_element = Systolic)
