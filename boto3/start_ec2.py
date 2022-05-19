@@ -6,7 +6,9 @@ ec2_client = boto3.client('ec2')
 EC2_INSTANCE_ID = input('Enter the instance ID: ')
 EC2Instance = ec2_resource.Instance(EC2_INSTANCE_ID)
 EC2Instance.start()
+EC2Instance.wait_until_running()
 
+'''
 while True:
     if EC2Instance.state['Name'] == 'running':
         print('Instance is running')
@@ -14,7 +16,7 @@ while True:
     else:
         print('Instance is not running yet')
         time.sleep(25)
-
+'''
 
 
 
