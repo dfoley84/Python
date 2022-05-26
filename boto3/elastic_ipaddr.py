@@ -19,5 +19,4 @@ EC2_client = session.client('ec2')
 response = EC2_client.describe_addresses()
 for address in response['Addresses']:
     if address['InstanceId'] is None:
-        print(address['PublicIp'])
         EC2_client.release_address(AllocationId=address['AllocationId'])
