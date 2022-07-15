@@ -1,12 +1,21 @@
-from re import S
 import boto3
+import os
 import datetime
+import hvac
+
+#Login to Vault
+Region = input('Enter the region: ')
+client = hvac.Client(url='http://localhost:8200',token= os.environ['VAULT_TOKEN'])
+secret = client.read_secret_version(path='aws/region/' + Region)
+aws_access_key_id = secret['data']['aws_access_key_id']
+aws_secret_access_key = secret['data']['aws_secret_access_key']
+
+
 
 session = boto3.Session(
-    aws_access_key_id='',
-    aws_secret_access_key='',
-    aws_session_token='',
-    region_name=''
+    aws_access_key_id=aws_access_key_id,
+    aws_secret_access_key=aws_secret_access_key,
+    region_name=Region
 )
 
 client = session.client('rds')
@@ -61,7 +70,6 @@ def modifydbinstance():
         AllocatedStorage=NewCapacity,
         ApplyImmediately=True
     )
-    
     print(response)
     
     waiter = client.get_waiter('modify_db_instance_is_completed')
