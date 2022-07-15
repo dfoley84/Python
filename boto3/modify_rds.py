@@ -5,8 +5,9 @@ import hvac
 
 #Login to Vault
 Region = input('Enter the region: ')
+Environment = input('Enter Environment (Dev, UAT, Prd): ')
 client = hvac.Client(url='http://localhost:8200',token= os.environ['VAULT_TOKEN'])
-secret = client.read_secret_version(path='aws/region/' + Region)
+secret = client.read_secret_version(path='aws/region/' + Environment)
 aws_access_key_id = secret['data']['aws_access_key_id']
 aws_secret_access_key = secret['data']['aws_secret_access_key']
 
