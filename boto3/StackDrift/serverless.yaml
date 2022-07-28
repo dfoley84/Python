@@ -1,17 +1,23 @@
-service: Drift
+service: stackdrift-detection
 frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.8
-  region: eu-west-1
+  region: ${opt:region}
+  memorySize: 1024
+  timeout: 900
+  role: ${self:custom.roles.${opt:stage}}
+custom:
+  roles:
+    dev:
+    uat:
+    prod:
 functions:
-  rateHandler:
-    handler: handler.run
+  dispatcher:
+    handler: dispatcher.dispatch
     events:
-      # Invoke Lambda function every minute
-      - schedule: rate(1 minute)
+      - sns: dispatch
   cronHandler:
     handler: handler.run
     events:
-      # Invoke Lambda function every 2nd minute from Mon-Fri
-      - schedule: cron(0/2 * ? * MON-FRI *)
+      - schedule: cron(10 9 ? * mon *)
