@@ -65,7 +65,7 @@ def lambda_handler(event, context):
                         'AWS Account: ' + AccountId + '\n' +
                         'Description: ' + Description,
                        'issuetype': {'name': 'Bug'},
-                        priority={'name': 'High'}
+                        'priority': {'name': 'High'}
                     }
                     new_issue = jira_connection.create_issue(fields=issue_dict)
                     
