@@ -43,34 +43,45 @@ def lambda_handler(event, context):
                         ],
                     })
         
+        
+        #JIRA Query
+        size = 100
+        initial = 0
+
+        list = []
+        while True:
+            start= initial*size
+            issues = jira_connection.search_issues('project=<>',  start,size)
+            if len(issues) == 0:
+                break
+            initial += 1
+            for issue in issues:
+                issue_title = issue.fields.summary
+                issues_description = issue.fields.description[13:]
+                s = issues_description.replace('Region: ','')
+                s1 = s[:s.find('\n')]
+                list.append([s1,issue_title])
+
         try:
             for page in page_iterator:
                 for finding in page['findings']:
                     AccountId = finding['awsAccountId']
                     Title = finding['title']
-                    Description = finding['description']
-                    Severity = finding['severity']
                     for resource in finding['resources']:
                         InstanceId = resource['id']
                         InstanceRegion = resource['region']
-                        
-                        #print(AccountId, Title, Description, Severity, InstanceId, InstanceRegion)
-                        
-                        issue_dict = {
-                        'project': {'key': '<key>'},
-                        'summary': Title,
-                        'description': 'Vulnerability Level: ' + Severity + '\n' +
-                        'Resource ID: ' + InstanceId + '\n' + 
-                        'Region: ' + InstanceRegion + '\n' + 
-                        'AWS Account: ' + AccountId + '\n' +
-                        'Description: ' + Description,
-                       'issuetype': {'name': 'Bug'},
-                        'priority': {'name': 'High'}
-                    }
-                    new_issue = jira_connection.create_issue(fields=issue_dict)
-                    
+                        if [InstanceId, Title] in list:
+                            print('Issue Exists')
+                        else:
+                            issue_dict = {
+                                'project': {'key': 'TET'},
+                                'summary': Title,
+                                'description':  'Resource ID: ' + InstanceId + '\n' + 
+                                'Region: ' + InstanceRegion + '\n',
+                                'issuetype': {'name': 'Bug'}
+                            }
+                            new_issue = jira_connection.create_issue(fields=issue_dict)
+
+
         except Exception as e:
             print(e)
-            pass
-
-
