@@ -34,7 +34,7 @@ for region in regions:
     for i in UserRoles:
         ssm = i.client("ssm", region_name=region)
         response = ssm.put_parameter(
-            Name="packer-ecs-ami",
+            Name="<SSM Name>",
             Type="String",
             Overwrite=True,
             Value=ami_id)
