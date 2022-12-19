@@ -1,16 +1,10 @@
 import boto3
 from jira import JIRA
 
-
 #Jira connection
 jira_connection = JIRA(
     basic_auth=('@.com', ''),
     server="https://.atlassian.net")
-
-size = 1000
-initial = 0
-list = []
-
 
 def lambda_handler(event, context):
 
@@ -33,16 +27,14 @@ def lambda_handler(event, context):
         RepositoryName = event['detail']['resources'][0]['details']['awsEcrContainerImage']['repositoryName']
         Vulnerability_VulnerabilityId = event['detail']['packageVulnerabilityDetails']['vulnerabilityId']
         
-        if Vulnerability_severity == 'CRITICAL':
-          Vulnerability_priority = 'Highest'
-        elif Vulnerability_severity == 'High':
-          Vulnerability_priority = 'High'
-       
-        if Vulnerability_VulnerabilityId in list:
-            print('Issue already exists')
+        #Check if Vulnerability already exists in Jira
+        issues = jira_connection.search_issues(
+                            'project = <> AND summary ~' + Vulnerability_VulnerabilityId)
+        if len(issues) > 0:
+            print('Vulnerability: ' + Vulnerability_VulnerabilityId + ' already exists in Jira\n')
         else
             issue_dict = {
-                'project': {'key': 'SEC'},
+                'project': {'key': ''},
                 'summary':Vulnerability_VulnerabilityId,
                 'priority': {'name': Vulnerability_priority },
                 'labels': [RepositoryName],
