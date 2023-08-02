@@ -1,4 +1,3 @@
-# aws_resources.py
 from fastapi import APIRouter
 from fastapi import FastAPI, HTTPException
 import boto3
@@ -6,7 +5,7 @@ import logging
 
 router = APIRouter()
 
-@router.get("/DBInstances", tags=["RDS"])
+@router.get("/DBInstances")
 def get_all_buckets(region: str, aws_access_key_id: str, aws_secret_access_key: str, aws_session_token: str):
     rds = boto3.client('rds',
                         region_name=region,
