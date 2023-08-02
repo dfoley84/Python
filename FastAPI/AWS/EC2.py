@@ -1,4 +1,3 @@
-# aws_resources.py
 from fastapi import APIRouter
 from fastapi import FastAPI, HTTPException
 import boto3
@@ -6,7 +5,7 @@ import logging
 
 router = APIRouter()
 
-@router.get("/instances", tags=["EC2"])
+@router.get("/instances")
 def get_all_buckets(region: str, aws_access_key_id: str, aws_secret_access_key: str, aws_session_token: str):
     ec2 = boto3.resource('ec2',
                         region_name=region,
@@ -17,7 +16,7 @@ def get_all_buckets(region: str, aws_access_key_id: str, aws_secret_access_key: 
     instances = ec2.instances.all()
     return [instance.id for instance in instances]
 
-@router.get("/instance/{instance_id}", tags=["EC2"])
+@router.get("/instance/{instance_id}")
 def get_instance_details_by_name(region: str, aws_access_key_id: str, aws_secret_access_key: str, aws_session_token: str, instance_id: str):
     try:
         ec2 = boto3.resource('ec2',
