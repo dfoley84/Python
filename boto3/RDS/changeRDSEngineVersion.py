@@ -13,7 +13,7 @@ def handler():
             instance_type = instance['DBInstanceClass']
             instance_engine = instance['Engine']
             EngineVersion = instance['EngineVersion']
-            if instance_engine == 'mysql' and EngineVersion == '8.0.36':
+            if instance_engine == 'mysql' and EngineVersion != '8.0.40':
                 rds.modify_db_instance(
                     DBInstanceIdentifier=instance_name, 
                     EngineVersion='8.0.40',
