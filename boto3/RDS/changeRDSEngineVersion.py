@@ -6,7 +6,6 @@ region = ['eu-west-1','us-east-1','us-west-2','ap-southeast-2']
 def handler():
     for i in region:
         rds = boto3.client('rds', region_name=i)
-        #get All RDS instances
         response = rds.describe_db_instances()
         for instance in response['DBInstances']:
             instance_name = instance['DBInstanceIdentifier']
