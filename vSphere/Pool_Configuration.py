@@ -29,7 +29,7 @@ for Server in Servers:
         data = {"domain": domain, "password": pw, "username": username}
         json_data = json.dumps(data)
         response = requests.post(
-            f'{url}/rest/login', verify=False, headers=headers, data=json_data)
+            f'{url}/rest/login', headers=headers, data=json_data)
         data = response.json()
         access_token = {
             'accept': '*/*',
@@ -37,7 +37,7 @@ for Server in Servers:
         }
 
         response = requests.get(
-            f'{url}/rest/inventory/v1/desktop-pools', verify=False, headers=access_token)
+            f'{url}/rest/inventory/v1/desktop-pools', headers=access_token)
         data = response.json()
         mycursor = mydb.cursor()
         print(data)
